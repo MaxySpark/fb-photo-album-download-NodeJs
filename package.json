@@ -1,0 +1,16 @@
+{
+  "name": "fb-node",
+  "version": "1.0.0",
+  "description": "fb api photos",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app"
+  },
+  "author": "MaxySpark",
+  "license": "ISC",
+  "dependencies": {
+    "fb": "^1.1.1",
+    "request": "^2.74.0",
+    "underscore": "^1.8.3"
+  }
+}
