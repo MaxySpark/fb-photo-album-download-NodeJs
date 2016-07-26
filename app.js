@@ -3,9 +3,9 @@ var request = require('request');
 var FB = require('fb');
 var fs = require('fs');
 
-var my_token = "Here Goes The Graph Api Explorer token";
+var my_token = "token";
 
-FB.setAccessToken(mt_token);
+FB.setAccessToken(my_token);
 var urls = [];
 
 FB.api('/me/albums','get',  function (res) {
@@ -14,19 +14,39 @@ FB.api('/me/albums','get',  function (res) {
    return;
   }
   var data = _.findWhere(res.data, {name:"Mobile Uploads"});
-  FB.api('/'+data.id+'/photos', 'get', (resp) => {
-       if(!resp || resp.error) {
-   console.log(!resp ? 'error occurred' : resp.error);
-   return;
-  }
-resp.data.forEach(function(element) {
-    urls.push(element.source);
+  var nextPage = '/'+data.id+'/photos?limit=80';
+
+  FB.api(nextPage, 'get', function (response){
+      download(response);
+      
+  });
+  console.log(urls.length);
 });
 
-for(var i = 0;i<urls.length;i++){
-    request(urls[i]).pipe(fs.createWriteStream('img/'+i+'.jpg'));
-    console.log("Downloaded : "+i+'.jpg');
+function downloadLoop(urls) {
+    var j = 1;
+            for(var i = 0;i<urls.length;i++){
+                request(urls[i]).pipe(fs.createWriteStream('img/'+i+'.jpg')).on('finish', function(response) {         
+                     console.log("Download Completed : "+(j++)+'/'+i);
+                    });
+                
+            }
 }
-  
-  });
-});
+
+function download(resp) {
+    if(!resp || resp.error) {
+                        console.log(!resp ? 'error occurred' : resp.error);
+                        return;
+                }
+            resp.data.forEach(function(element) {
+                urls.push(element.images[0].source);                           
+            });
+            nextPage = resp.paging.next;
+             downloadLoop(urls);
+            //  if(nextPage != "undefined") {
+
+            //  FB.api(nextPage,'get',function (response) {
+            //      download(resp);
+            //  });
+            //}
+}
