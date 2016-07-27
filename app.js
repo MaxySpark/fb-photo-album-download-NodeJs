@@ -7,46 +7,70 @@ var my_token = "token";
 
 FB.setAccessToken(my_token);
 var urls = [];
-
-FB.api('/me/albums','get',  function (res) {
-  if(!res || res.error) {
-   console.log(!res ? 'error occurred' : res.error);
-   return;
-  }
-  var data = _.findWhere(res.data, {name:"Mobile Uploads"});
-  var nextPage = '/'+data.id+'/photos?limit=80';
-
-  FB.api(nextPage, 'get', function (response){
-      download(response);
-      
-  });
-  console.log(urls.length);
-});
-
+var count = 1;
 function downloadLoop(urls) {
     var j = 1;
             for(var i = 0;i<urls.length;i++){
                 request(urls[i]).pipe(fs.createWriteStream('img/'+i+'.jpg')).on('finish', function(response) {         
-                     console.log("Download Completed : "+(j++)+'/'+i);
+                    console.log("Download Completed : "+(j++)+'/'+i);
                     });
                 
             }
 }
 
-function download(resp) {
-    if(!resp || resp.error) {
+function download(next) {
+        FB.api(next, 'get' , function (resp) {
+            if(!resp || resp.error) {
                         console.log(!resp ? 'error occurred' : resp.error);
                         return;
                 }
-            resp.data.forEach(function(element) {
-                urls.push(element.images[0].source);                           
-            });
-            nextPage = resp.paging.next;
-             downloadLoop(urls);
-            //  if(nextPage != "undefined") {
+           
 
-            //  FB.api(nextPage,'get',function (response) {
-            //      download(resp);
-            //  });
-            //}
+            console.log(count++);
+            
+            console.log(resp.data.length);
+             //downloadLoop(urls);
+             for (var i = 0; i < resp.data.length; i++) {
+                urls.push(resp.data[i].images[0].source);                           
+            }
+            console.log(urls.length);
+            if(resp.paging && resp.paging.next) {
+                console.log(resp.paging.next);
+             download(resp.paging.next);
+            } else {
+                console.log(urls.length);
+            }
+
+        });
 }
+
+
+FB.api('/me/albums','get',  function (res) {
+        if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+        }
+       
+        var data = _.findWhere(res.data, {name:"Mobile Uploads"});
+        var nextPage = '/'+data.id+'/photos';
+
+        //for number of total photos
+
+        FB.api('/'+data.id, {fields: 'count'}, function (response){
+            console.log(response);
+        });
+
+        //for download
+        download(nextPage);
+
+        
+        // FB.api(nextPage, 'get', function (response){
+        //      //console.log(response);
+        //     download(response);
+            
+        // });
+        
+});
+
+
+
