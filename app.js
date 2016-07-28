@@ -16,7 +16,7 @@ var argv = require('yargs').option({
     }
 }).help('help').alias('help','h').argv
 
-var my_token = "EAACEdEose0cBABroAioZBGzqRnpoakTvYrBN4tezypHxCvsIzmYH6WrIW7fbz6AbTwzwF3SQDPyXINZC65IJZBhZA69Nom6PmfK9UeWSfD2XTyeyiRyMIJ6AbTzAcmPqfIKTwTXfX5f7OxqvOcShk8ygVuhyCWoKmKPAtKFNtwZDZD";
+var my_token = "token";
 
 FB.setAccessToken(my_token);
 var urls = [];
