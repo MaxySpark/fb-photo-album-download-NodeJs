@@ -9,7 +9,7 @@ And Select permission
 ####$ node app
 
 #####Options
-####$ node app --album <Album Name>
+####$ node app --album "Album Name"
 ####$ node app --help
 
 #####Screenshots
