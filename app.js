@@ -43,7 +43,7 @@ function download(next) {
             for (var i = 0; i < body.data.length; i++) {
                 urls.push(body.data[i].images[0].source);                           
             }
-            console.log("getting images... Total Image : "+ urls.length);
+            console.log("getting images... Total Images Found : "+ urls.length);
             if(body.paging && body.paging.next) {
              download(body.paging.next);
             
@@ -68,7 +68,7 @@ FB.api('/me/albums','get',  function (res) {
             for (var i = 0; i < response.data.length; i++) {
                 urls.push(response.data[i].images[0].source);                           
             }
-             console.log("Getting images... Total Image Found : "+ urls.length);
+             console.log("Getting images... Total Images Found : "+ urls.length);
             download(response.paging.next);
         });        
     });
