@@ -3,38 +3,34 @@ var request = require('request');
 var FB = require('fb');
 var fs = require('fs');
 
-var my_token = "token";
+var my_token = "EAACEdEose0cBABoocyLH3OakFUNhqy7A6QLLcCg5BJlg7CBek2z8wan07zNtNsemMM05Pvv7ZCZCW2qyewyXqzTi1GLJiODkhk6IJhFZCYpggFhDuZAIgsAmq26EXbO7l32CItRIy8SzprIHAZCMufzQdOzdK0zWfAcZA5gNnEjAZDZD";
 
 FB.setAccessToken(my_token);
 var urls = [];
 var count = 1;
+var i = 0;
+var j = 0;
 function downloadLoop(urls) {
-    var j = 1;
-            for(var i = 0;i<urls.length;i++){
+            for(i;i<urls.length;i++){
                 request(urls[i]).pipe(fs.createWriteStream('img/'+(i+1)+'.jpg')).on('finish', function(response) {         
-                    console.log("Download Completed : "+(j++)+'/'+i);
+                    console.log("Download Completed : "+(++j)+'/'+i);
                     });
                 
             }
 }
 
 function download(next) {
-        FB.api(next, 'get' , function (resp) {
-            if(!resp || resp.error) {
-                        console.log(!resp ? 'error occurred' : resp.error);
-                        return;
-                }
-           
-
-            // console.log(count++);
-
-             for (var i = 0; i < resp.data.length; i++) {
-                urls.push(resp.data[i].images[0].source);                           
+        request({
+            url: next,
+            json: true
+        }, function(err, res, body) {
+            if(err) throw err;
+            for (var i = 0; i < body.data.length; i++) {
+                urls.push(body.data[i].images[0].source);                           
             }
-            console.log(urls.length);
-            if(resp.paging && resp.paging.next) {
-
-             download(resp.paging.next);
+            console.log("getting images... Total Image : "+ urls.length);
+            if(body.paging && body.paging.next) {
+             download(body.paging.next);
             
         } else {
                 console.log("Completed");
@@ -50,18 +46,13 @@ FB.api('/me/albums','get',  function (res) {
         return;
         }
        
-        var data = _.findWhere(res.data, {name:"Mobile Uploads"});
+        var data = _.findWhere(res.data, {name:"Timeline Photos"});
         var nextPage = '/'+data.id+'/photos';
 
-        //for number of total photos
-
-        // FB.api('/'+data.id, {fields: 'count'}, function (response){
-        //     console.log(response);
-        // });
-
-        //for download
-        download(nextPage);
+        FB.api(nextPage, function (response){
+            for (var i = 0; i < response.data.length; i++) {
+                urls.push(response.data[i].images[0].source);                           
+            }
+            download(response.paging.next);
+        });        
     });
-
-
-
