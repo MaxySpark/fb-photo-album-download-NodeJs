@@ -7,3 +7,7 @@ And Select permission
 ###first open a terminal in the folder and enter the commands
 ####$ npm install
 ####$ node app
+
+#####Options
+####$ node app --album <Album Name>
+####$ node app --help
