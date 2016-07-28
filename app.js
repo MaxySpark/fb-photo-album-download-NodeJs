@@ -11,7 +11,7 @@ var count = 1;
 function downloadLoop(urls) {
     var j = 1;
             for(var i = 0;i<urls.length;i++){
-                request(urls[i]).pipe(fs.createWriteStream('img/'+i+'.jpg')).on('finish', function(response) {         
+                request(urls[i]).pipe(fs.createWriteStream('img/'+(i+1)+'.jpg')).on('finish', function(response) {         
                     console.log("Download Completed : "+(j++)+'/'+i);
                     });
                 
@@ -26,21 +26,20 @@ function download(next) {
                 }
            
 
-            console.log(count++);
-            
-            console.log(resp.data.length);
-             //downloadLoop(urls);
+            // console.log(count++);
+
              for (var i = 0; i < resp.data.length; i++) {
                 urls.push(resp.data[i].images[0].source);                           
             }
             console.log(urls.length);
             if(resp.paging && resp.paging.next) {
-                console.log(resp.paging.next);
-             download(resp.paging.next);
-            } else {
-                console.log(urls.length);
-            }
 
+             download(resp.paging.next);
+            
+        } else {
+                console.log("Completed");
+            }
+downloadLoop(urls);
         });
 }
 
@@ -56,21 +55,13 @@ FB.api('/me/albums','get',  function (res) {
 
         //for number of total photos
 
-        FB.api('/'+data.id, {fields: 'count'}, function (response){
-            console.log(response);
-        });
+        // FB.api('/'+data.id, {fields: 'count'}, function (response){
+        //     console.log(response);
+        // });
 
         //for download
         download(nextPage);
-
-        
-        // FB.api(nextPage, 'get', function (response){
-        //      //console.log(response);
-        //     download(response);
-            
-        // });
-        
-});
+    });
 
 
 
