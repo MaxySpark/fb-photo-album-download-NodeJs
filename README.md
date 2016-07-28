@@ -11,3 +11,12 @@ And Select permission
 #####Options
 ####$ node app --album <Album Name>
 ####$ node app --help
+
+#####Screenshots
+![Scrrenshot 1](https://raw.githubusercontent.com/MaxySpark/fb-photo-album-download/master/Screenshot/fbs1.jpg "Scrrenshot 1")
+
+![Scrrenshot 2](https://raw.githubusercontent.com/MaxySpark/fb-photo-album-download/master/Screenshot/fbs2.jpg "Scrrenshot 2")
+
+![Scrrenshot 3](https://raw.githubusercontent.com/MaxySpark/fb-photo-album-download/master/Screenshot/fbs3.jpg "Scrrenshot 3")
+
+
