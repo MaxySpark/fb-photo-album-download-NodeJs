@@ -3,7 +3,7 @@ var request = require('request');
 var FB = require('fb');
 var fs = require('fs');
 
-var my_token = "EAACEdEose0cBABoocyLH3OakFUNhqy7A6QLLcCg5BJlg7CBek2z8wan07zNtNsemMM05Pvv7ZCZCW2qyewyXqzTi1GLJiODkhk6IJhFZCYpggFhDuZAIgsAmq26EXbO7l32CItRIy8SzprIHAZCMufzQdOzdK0zWfAcZA5gNnEjAZDZD";
+var my_token = "token";
 
 FB.setAccessToken(my_token);
 var urls = [];
