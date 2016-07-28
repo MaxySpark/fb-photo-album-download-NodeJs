@@ -69,6 +69,10 @@ FB.api('/me/albums','get',  function (res) {
                 urls.push(response.data[i].images[0].source);                           
             }
              console.log("Getting images... Total Images Found : "+ urls.length);
-            download(response.paging.next);
+             if(response.paging && response.paging.next) {
+                download(response.paging.next);
+             } else {
+                 downloadLoop(urls);
+             }
         });        
     });
